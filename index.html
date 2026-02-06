@@ -1,143 +1,433 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة الكيمياء الذكية للسادس العلمي | الأستاذ عمار ناصر حسين</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  --primary: #002366; --secondary: #0056b3; --accent: #ffcc00;
-  --bg: #f8f9fa; --white: #ffffff;
-}
-body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; }
-header { background: var(--primary); color:white; padding:20px; text-align:center; border-bottom:5px solid var(--accent); }
-.search-container { padding:20px; text-align:center; background: var(--white); }
-.search-box, #apiKeyInput { width:80%; padding:10px 15px; border-radius:25px; border:2px solid var(--secondary); font-size:1.1rem; outline:none; margin-bottom:10px; }
-.chapters-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:15px; padding:20px 5%; }
-.ch-card { background:white; border-radius:15px; padding:20px; text-align:center; cursor:pointer; transition:0.3s; box-shadow:0 4px 6px rgba(0,0,0,0.05); border:1px solid #eee; }
-.ch-card:hover { transform:translateY(-10px); background:var(--secondary); color:white; }
-.ch-card i { font-size:2.5rem; margin-bottom:10px; color: var(--secondary); }
-.ch-card:hover i { color: var(--accent); }
-.display-area { display:none; padding:20px 5%; max-width:1000px; margin:auto; }
-.result-card { background:white; border-radius:20px; padding:30px; box-shadow:0 10px 40px rgba(0,0,0,0.1); border-right:10px solid var(--primary); margin-bottom:20px; }
-.math-lab { background:#fffde7; border-right:6px solid #fbc02d; padding:15px; margin-top:10px; border-radius:10px; }
-.math-step { font-family: 'Courier New', Courier, monospace; background:#fff; padding:10px; margin:10px 0; border:1px solid #ddd; font-weight:bold; color:#d32f2f; }
-.btn-back { background: var(--primary); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; margin-bottom:10px; }
-.api-note { font-size:0.9rem; color:#555; margin-top:5px; }
-button.save-key { padding:8px 20px; border:none; border-radius:15px; background:var(--primary); color:white; cursor:pointer; margin-top:5px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعدادات Gemini API</title>
+    <style>
+        :root {
+            --primary: #4285f4;
+            --accent: #1a73e8;
+            --background: #f8f9fa;
+            --text: #202124;
+            --card-bg: #ffffff;
+            --border: #dadce0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            color: #5f6368;
+            font-size: 1.1rem;
+        }
+        
+        .search-container {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+        }
+        
+        .info-note {
+            font-size: 0.95rem;
+            color: #555;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        
+        .info-note a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .info-note a:hover {
+            text-decoration: underline;
+        }
+        
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #clearBtn {
+            background: #f1f3f4;
+            color: #5f6368;
+            border: 1px solid var(--border);
+        }
+        
+        #clearBtn:hover {
+            background: #e8eaed;
+            color: var(--text);
+        }
+        
+        .status-container {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 12px;
+            background-color: #f8f9fa;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        
+        .status-container.show {
+            display: block;
+        }
+        
+        .status-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #statusText {
+            font-family: monospace;
+            word-break: break-all;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
+            background-color: #e8f0fe;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ol {
+            padding-right: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .instructions strong {
+            color: var(--accent);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: #5f6368;
+            font-size: 0.9rem;
+        }
+        
+        .key-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border);
+        }
+        
+        .key-status span:first-child {
+            font-weight: bold;
+        }
+        
+        .key-status span:last-child {
+            font-family: monospace;
+            background-color: #f1f3f4;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #1e8e3e;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .search-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .button-container {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 <body>
-
-<header>
-  <h1>🧪 منصة الكيمياء الذكية للسادس العلمي</h1>
-  <p>إعداد الأستاذ: عمار ناصر حسين</p>
-</header>
-
-<div class="search-container">
-  <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن درس أو سؤال...">
-
-  <label for="apiKeyInput" style="display:block; font-weight:bold;">🔑 مفتاح Google AI Studio (اختياري لمحاكاة Gemini)</label>
-  <input type="text" id="apiKeyInput" placeholder="ادخل مفتاح API هنا" />
-  <p class="api-note">💡 للحصول على المفتاح، افتح <a href="https://console.cloud.google.com/ai" target="_blank">Google AI Studio</a> ونسخه ولصقه هنا.</p>
-  <button class="save-key" onclick="saveApiKey()">حفظ المفتاح</button>
-</div>
-
-<div class="chapters-grid" id="mainMenu">
-  <div class="ch-card" onclick="showChapter('ch1')"><i class="fas fa-fire"></i><br>الفصل 1</div>
-  <div class="ch-card" onclick="showChapter('ch2')"><i class="fas fa-balance-scale"></i><br>الفصل 2</div>
-  <div class="ch-card" onclick="showChapter('ch3')"><i class="fas fa-vial"></i><br>الفصل 3</div>
-  <div class="ch-card" onclick="showChapter('ch4')"><i class="fas fa-bolt"></i><br>الفصل 4</div>
-  <div class="ch-card" onclick="showChapter('ch5')"><i class="fas fa-atom"></i><br>الفصل 5</div>
-  <div class="ch-card" onclick="showChapter('ch6')"><i class="fas fa-microscope"></i><br>الفصل 6</div>
-  <div class="ch-card" onclick="showChapter('ch7')"><i class="fas fa-flask"></i><br>الفصل 7</div>
-  <div class="ch-card" onclick="showChapter('ch8')"><i class="fas fa-leaf"></i><br>الفصل 8</div>
-</div>
-
-<div class="display-area" id="displayArea">
-  <button class="btn-back" onclick="goHome()">← العودة للفصول</button>
-  <div id="chapterContent"></div>
-</div>
-
-<script>
-// حفظ المفتاح في LocalStorage
-function saveApiKey(){
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if(!key){ alert("❌ الرجاء إدخال المفتاح"); return; }
-  localStorage.setItem('geminiApiKey', key);
-  alert("✅ تم حفظ المفتاح بنجاح.");
-}
-
-// استرجاع المفتاح عند تحميل الصفحة
-window.addEventListener('DOMContentLoaded', () => {
-  const savedKey = localStorage.getItem('geminiApiKey');
-  if(savedKey) document.getElementById('apiKeyInput').value = savedKey;
-});
-
-// بيانات الفصول + أسئلة محاكاة
-const chapters = {
-  ch1: { title:"الفصل 1: الثرموداينمك", content:`
-    <h2>الفصل الأول: الثرموداينمك</h2>
-    <p>شرح مبادئ الحرارة والطاقة والتغيرات الكيميائية.</p>
-    <div class="math-lab">
-      <h4>مثال: احتراق الغلوكوز</h4>
-      <p>q = m * c * ΔT</p>
-      <div class="math-step">q = 1200 * 4.2 * 4.5 = 22680 J</div>
+    <div class="container">
+        <header>
+            <h1>🔑 إعدادات Gemini API</h1>
+            <p class="subtitle">أدخل مفتاح Google AI Studio الخاص بك للاتصال بنماذج Gemini</p>
+        </header>
+        
+        <div class="search-container">
+            <div class="key-status">
+                <span>حالة المفتاح:</span>
+                <span id="keyStatus">غير محفوظ</span>
+            </div>
+            
+            <label for="apiKeyInput">
+                🔑 أدخل مفتاح Google AI Studio الخاص بك:
+            </label>
+            <input type="password" id="apiKeyInput" class="search-box" placeholder="ادخل مفتاح API هنا للاتصال بـ Gemini">
+            <p class="info-note">
+                💡 ملاحظة: للحصول على المفتاح، افتح الرابط التالي، انسخ المفتاح ثم الصقه هنا: 
+                <a href="https://console.cloud.google.com/ai" target="_blank">Google AI Studio</a>
+            </p>
+            
+            <div class="button-container">
+                <button onclick="saveApiKey()">
+                    <span class="icon">💾</span> حفظ المفتاح
+                </button>
+                <button id="clearBtn" onclick="clearApiKey()">
+                    <span class="icon">🗑️</span> حذف المفتاح
+                </button>
+                <button onclick="toggleKeyVisibility()">
+                    <span class="icon" id="visibilityIcon">👁️</span> <span id="visibilityText">إظهار المفتاح</span>
+                </button>
+            </div>
+            
+            <div class="status-container" id="statusContainer">
+                <div class="status-title">
+                    <span class="icon">ℹ️</span> <span>حالة التخزين:</span>
+                </div>
+                <div id="statusText"></div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3><span class="icon">📋</span> تعليمات الحصول على المفتاح:</h3>
+            <ol>
+                <li>اذهب إلى <a href="https://console.cloud.google.com/ai" target="_blank"><strong>Google AI Studio</strong></a> وقم بتسجيل الدخول بحساب Google الخاص بك.</li>
+                <li>انقر على <strong>Get API Key</strong> في القائمة اليمنى.</li>
+                <li>انقر على <strong>Create API Key</strong> لإنشاء مفتاح جديد.</li>
+                <li>اختر <strong>Create API key in new project</strong> أو اختر مشروعًا موجودًا.</li>
+                <li>انسخ المفتاح الذي تم إنشاؤه والصقه في الحقل أعلاه.</li>
+                <li>انقر على <strong>حفظ المفتاح</strong> لتخزينه في متصفحك.</li>
+            </ol>
+            <p style="margin-top: 15px; font-style: italic;">
+                ⚠️ المفتاح يتم تخزينه محليًا في متصفحك فقط ولن يتم إرساله إلى أي خادم خارجي.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 - Gemini API Configuration | هذا المكون مخصص للتكامل مع نموذج Gemini</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">يتم تخزين المفتاح في localStorage للمتصفح الحالي فقط</p>
+        </div>
     </div>
-  `},
-  ch2: { title:"الفصل 2: الاتزان الكيميائي", content:`
-    <h2>الفصل الثاني: الاتزان الكيميائي</h2>
-    <p>ثابت الاتزان، حساب تراكيز الاتزان.</p>
-    <div class="math-lab">
-      <h4>مثال: H2 + I2 ⇌ 2HI</h4>
-      <p>Kc = [HI]^2 / ([H2][I2])</p>
-      <div class="math-step">x ≈ 0.267 M</div>
-    </div>
-  `},
-  ch3: { title:"الفصل 3: الاتزان الأيوني", content:"<p>شرح كامل للاتزان الأيوني مع الأمثلة.</p>"},
-  ch4: { title:"الفصل 4: الكهربائية", content:"<p>شرح الجهد، التيار، المقاومة.</p>"},
-  ch5: { title:"الفصل 5: التناسقية", content:"<p>شرح المعقدات التناسقية.</p>"},
-  ch6: { title:"الفصل 6: التحليلية", content:"<p>طرق التحليل الكمي والنوعي، أسئلة محاكاة وزارية.</p>"},
-  ch7: { title:"الفصل 7: العضوية", content:"<p>الهيدروكربونات، الكحوليات، الأحماض، تفاعلات محلولة.</p>"},
-  ch8: { title:"الفصل 8: الحياتية", content:"<p>الأحماض الأمينية، الإنزيمات، الخلايا.</p>"}
-};
 
-// عرض الفصل
-function showChapter(id){
-  document.getElementById('mainMenu').style.display='none';
-  document.getElementById('displayArea').style.display='block';
-  document.getElementById('chapterContent').innerHTML = chapters[id].content;
-
-  // إضافة محاكاة سؤال وزاري
-  const apiKey = localStorage.getItem('geminiApiKey');
-  if(apiKey){
-    const simAnswer = `<div class="result-card"><strong>💡 محاكاة Gemini:</strong><br>
-    (لو كان المفتاح حقيقي، كان سيجيب Gemini على أي سؤال هنا تلقائيًا)</div>`;
-    document.getElementById('chapterContent').innerHTML += simAnswer;
-  }
-}
-
-// العودة للفصول
-function goHome(){
-  document.getElementById('displayArea').style.display='none';
-  document.getElementById('mainMenu').style.display='grid';
-}
-
-// بحث داخلي
-document.getElementById('searchInput').addEventListener('input', function(){
-  const val = this.value.toLowerCase();
-  for(const ch in chapters){
-    const card = document.querySelector(`.ch-card[onclick*="${ch}"]`);
-    if(chapters[ch].title.toLowerCase().includes(val)){
-      card.style.display='block';
-    }else{
-      card.style.display='none';
-    }
-  }
-});
-</script>
-
+    <script>
+        // تخزين المفتاح في LocalStorage حتى لا يحتاج لإعادة كتابته
+        function saveApiKey(){
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if(!key){
+                showStatus("❌ الرجاء إدخال المفتاح أولاً", "error");
+                return;
+            }
+            
+            // التحقق من شكل المفتاح (يبدأ عادة بـ AIza)
+            if(!key.startsWith("AIza")) {
+                showStatus("⚠️ المفتاح غير معتاد. يبدأ مفتاح Google API عادة بـ AIza...", "warning");
+            }
+            
+            localStorage.setItem('geminiApiKey', key);
+            updateKeyStatus();
+            showStatus("✅ تم حفظ المفتاح بنجاح. يمكنك الآن استخدام Gemini عند وجود سيرفر Node.js.", "success");
+        }
+        
+        function clearApiKey() {
+            if(confirm("هل أنت متأكد من حذف المفتاح المحفوظ؟")) {
+                localStorage.removeItem('geminiApiKey');
+                document.getElementById('apiKeyInput').value = '';
+                updateKeyStatus();
+                showStatus("🗑️ تم حذف المفتاح بنجاح.", "info");
+            }
+        }
+        
+        function toggleKeyVisibility() {
+            const input = document.getElementById('apiKeyInput');
+            const icon = document.getElementById('visibilityIcon');
+            const text = document.getElementById('visibilityText');
+            
+            if(input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = '👁️‍🗨️';
+                text.textContent = 'إخفاء المفتاح';
+            } else {
+                input.type = 'password';
+                icon.textContent = '👁️';
+                text.textContent = 'إظهار المفتاح';
+            }
+        }
+        
+        function showStatus(message, type) {
+            const statusContainer = document.getElementById('statusContainer');
+            const statusText = document.getElementById('statusText');
+            
+            statusText.textContent = message;
+            
+            // إضافة لون بناءً على النوع
+            if(type === 'error') {
+                statusContainer.style.backgroundColor = '#fce8e6';
+                statusContainer.style.borderColor = '#f28b82';
+            } else if(type === 'success') {
+                statusContainer.style.backgroundColor = '#e6f4ea';
+                statusContainer.style.borderColor = '#81c995';
+            } else if(type === 'warning') {
+                statusContainer.style.backgroundColor = '#fef7e0';
+                statusContainer.style.borderColor = '#fde293';
+            } else {
+                statusContainer.style.backgroundColor = '#f8f9fa';
+                statusContainer.style.borderColor = '#dadce0';
+            }
+            
+            statusContainer.classList.add('show');
+            
+            // إخفاء الرسالة بعد 5 ثواني
+            setTimeout(() => {
+                statusContainer.classList.remove('show');
+            }, 5000);
+        }
+        
+        function updateKeyStatus() {
+            const savedKey = localStorage.getItem('geminiApiKey');
+            const keyStatus = document.getElementById('keyStatus');
+            
+            if(savedKey) {
+                // إظهار جزء من المفتاح للإشارة إلى أنه محفوظ
+                const maskedKey = savedKey.substring(0, 10) + '...' + savedKey.substring(savedKey.length - 4);
+                keyStatus.textContent = `محفوظ (${maskedKey})`;
+                keyStatus.style.color = '#1e8e3e';
+            } else {
+                keyStatus.textContent = 'غير محفوظ';
+                keyStatus.style.color = '#d93025';
+            }
+        }
+        
+        // عند تحميل الصفحة، إعادة عرض المفتاح إذا موجود
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('geminiApiKey');
+            if(savedKey){
+                document.getElementById('apiKeyInput').value = savedKey;
+            }
+            
+            updateKeyStatus();
+            
+            // إظهار رسالة ترحيب إذا كان المفتاح محفوظًا
+            if(savedKey) {
+                setTimeout(() => {
+                    showStatus("🔑 تم تحميل المفتاح المحفوظ مسبقًا. يمكنك تعديله أو حذفه إذا لزم الأمر.", "info");
+                }, 1000);
+            }
+        });
+    </script>
 </body>
 </html>
