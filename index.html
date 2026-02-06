@@ -1,35 +1,143 @@
-<!-- ضع هذا الجزء داخل <body>، فوق الفصول أو تحت البحث -->
-<div class="search-container" style="margin-top:10px;">
-  <label for="apiKeyInput" style="display:block; margin-bottom:5px; font-weight:bold;">
-    🔑 أدخل مفتاح Google AI Studio الخاص بك:
-  </label>
-  <input type="text" id="apiKeyInput" class="search-box" placeholder="ادخل مفتاح API هنا للاتصال بـ Gemini">
-  <p style="font-size:0.9rem; color:#555; margin-top:5px;">
-    💡 ملاحظة: للحصول على المفتاح، افتح الرابط التالي، انسخ المفتاح ثم الصقه هنا: 
-    <a href="https://console.cloud.google.com/ai" target="_blank" style="color:var(--accent)">Google AI Studio</a>
-  </p>
-  <button onclick="saveApiKey()" style="margin-top:10px; padding:8px 20px; border:none; border-radius:15px; background:var(--primary); color:white; cursor:pointer;">
-    حفظ المفتاح
-  </button>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة الكيمياء الذكية للسادس العلمي | الأستاذ عمار ناصر حسين</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #002366; --secondary: #0056b3; --accent: #ffcc00;
+  --bg: #f8f9fa; --white: #ffffff;
+}
+body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; }
+header { background: var(--primary); color:white; padding:20px; text-align:center; border-bottom:5px solid var(--accent); }
+.search-container { padding:20px; text-align:center; background: var(--white); }
+.search-box, #apiKeyInput { width:80%; padding:10px 15px; border-radius:25px; border:2px solid var(--secondary); font-size:1.1rem; outline:none; margin-bottom:10px; }
+.chapters-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:15px; padding:20px 5%; }
+.ch-card { background:white; border-radius:15px; padding:20px; text-align:center; cursor:pointer; transition:0.3s; box-shadow:0 4px 6px rgba(0,0,0,0.05); border:1px solid #eee; }
+.ch-card:hover { transform:translateY(-10px); background:var(--secondary); color:white; }
+.ch-card i { font-size:2.5rem; margin-bottom:10px; color: var(--secondary); }
+.ch-card:hover i { color: var(--accent); }
+.display-area { display:none; padding:20px 5%; max-width:1000px; margin:auto; }
+.result-card { background:white; border-radius:20px; padding:30px; box-shadow:0 10px 40px rgba(0,0,0,0.1); border-right:10px solid var(--primary); margin-bottom:20px; }
+.math-lab { background:#fffde7; border-right:6px solid #fbc02d; padding:15px; margin-top:10px; border-radius:10px; }
+.math-step { font-family: 'Courier New', Courier, monospace; background:#fff; padding:10px; margin:10px 0; border:1px solid #ddd; font-weight:bold; color:#d32f2f; }
+.btn-back { background: var(--primary); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; margin-bottom:10px; }
+.api-note { font-size:0.9rem; color:#555; margin-top:5px; }
+button.save-key { padding:8px 20px; border:none; border-radius:15px; background:var(--primary); color:white; cursor:pointer; margin-top:5px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧪 منصة الكيمياء الذكية للسادس العلمي</h1>
+  <p>إعداد الأستاذ: عمار ناصر حسين</p>
+</header>
+
+<div class="search-container">
+  <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن درس أو سؤال...">
+
+  <label for="apiKeyInput" style="display:block; font-weight:bold;">🔑 مفتاح Google AI Studio (اختياري لمحاكاة Gemini)</label>
+  <input type="text" id="apiKeyInput" placeholder="ادخل مفتاح API هنا" />
+  <p class="api-note">💡 للحصول على المفتاح، افتح <a href="https://console.cloud.google.com/ai" target="_blank">Google AI Studio</a> ونسخه ولصقه هنا.</p>
+  <button class="save-key" onclick="saveApiKey()">حفظ المفتاح</button>
+</div>
+
+<div class="chapters-grid" id="mainMenu">
+  <div class="ch-card" onclick="showChapter('ch1')"><i class="fas fa-fire"></i><br>الفصل 1</div>
+  <div class="ch-card" onclick="showChapter('ch2')"><i class="fas fa-balance-scale"></i><br>الفصل 2</div>
+  <div class="ch-card" onclick="showChapter('ch3')"><i class="fas fa-vial"></i><br>الفصل 3</div>
+  <div class="ch-card" onclick="showChapter('ch4')"><i class="fas fa-bolt"></i><br>الفصل 4</div>
+  <div class="ch-card" onclick="showChapter('ch5')"><i class="fas fa-atom"></i><br>الفصل 5</div>
+  <div class="ch-card" onclick="showChapter('ch6')"><i class="fas fa-microscope"></i><br>الفصل 6</div>
+  <div class="ch-card" onclick="showChapter('ch7')"><i class="fas fa-flask"></i><br>الفصل 7</div>
+  <div class="ch-card" onclick="showChapter('ch8')"><i class="fas fa-leaf"></i><br>الفصل 8</div>
+</div>
+
+<div class="display-area" id="displayArea">
+  <button class="btn-back" onclick="goHome()">← العودة للفصول</button>
+  <div id="chapterContent"></div>
 </div>
 
 <script>
-// تخزين المفتاح في LocalStorage حتى لا يحتاج لإعادة كتابته
+// حفظ المفتاح في LocalStorage
 function saveApiKey(){
   const key = document.getElementById('apiKeyInput').value.trim();
-  if(!key){
-    alert("❌ الرجاء إدخال المفتاح أولاً");
-    return;
-  }
+  if(!key){ alert("❌ الرجاء إدخال المفتاح"); return; }
   localStorage.setItem('geminiApiKey', key);
-  alert("✅ تم حفظ المفتاح بنجاح. يمكنك الآن استخدام Gemini عند وجود سيرفر Node.js.");
+  alert("✅ تم حفظ المفتاح بنجاح.");
 }
 
-// عند تحميل الصفحة، إعادة عرض المفتاح إذا موجود
+// استرجاع المفتاح عند تحميل الصفحة
 window.addEventListener('DOMContentLoaded', () => {
   const savedKey = localStorage.getItem('geminiApiKey');
-  if(savedKey){
-    document.getElementById('apiKeyInput').value = savedKey;
+  if(savedKey) document.getElementById('apiKeyInput').value = savedKey;
+});
+
+// بيانات الفصول + أسئلة محاكاة
+const chapters = {
+  ch1: { title:"الفصل 1: الثرموداينمك", content:`
+    <h2>الفصل الأول: الثرموداينمك</h2>
+    <p>شرح مبادئ الحرارة والطاقة والتغيرات الكيميائية.</p>
+    <div class="math-lab">
+      <h4>مثال: احتراق الغلوكوز</h4>
+      <p>q = m * c * ΔT</p>
+      <div class="math-step">q = 1200 * 4.2 * 4.5 = 22680 J</div>
+    </div>
+  `},
+  ch2: { title:"الفصل 2: الاتزان الكيميائي", content:`
+    <h2>الفصل الثاني: الاتزان الكيميائي</h2>
+    <p>ثابت الاتزان، حساب تراكيز الاتزان.</p>
+    <div class="math-lab">
+      <h4>مثال: H2 + I2 ⇌ 2HI</h4>
+      <p>Kc = [HI]^2 / ([H2][I2])</p>
+      <div class="math-step">x ≈ 0.267 M</div>
+    </div>
+  `},
+  ch3: { title:"الفصل 3: الاتزان الأيوني", content:"<p>شرح كامل للاتزان الأيوني مع الأمثلة.</p>"},
+  ch4: { title:"الفصل 4: الكهربائية", content:"<p>شرح الجهد، التيار، المقاومة.</p>"},
+  ch5: { title:"الفصل 5: التناسقية", content:"<p>شرح المعقدات التناسقية.</p>"},
+  ch6: { title:"الفصل 6: التحليلية", content:"<p>طرق التحليل الكمي والنوعي، أسئلة محاكاة وزارية.</p>"},
+  ch7: { title:"الفصل 7: العضوية", content:"<p>الهيدروكربونات، الكحوليات، الأحماض، تفاعلات محلولة.</p>"},
+  ch8: { title:"الفصل 8: الحياتية", content:"<p>الأحماض الأمينية، الإنزيمات، الخلايا.</p>"}
+};
+
+// عرض الفصل
+function showChapter(id){
+  document.getElementById('mainMenu').style.display='none';
+  document.getElementById('displayArea').style.display='block';
+  document.getElementById('chapterContent').innerHTML = chapters[id].content;
+
+  // إضافة محاكاة سؤال وزاري
+  const apiKey = localStorage.getItem('geminiApiKey');
+  if(apiKey){
+    const simAnswer = `<div class="result-card"><strong>💡 محاكاة Gemini:</strong><br>
+    (لو كان المفتاح حقيقي، كان سيجيب Gemini على أي سؤال هنا تلقائيًا)</div>`;
+    document.getElementById('chapterContent').innerHTML += simAnswer;
+  }
+}
+
+// العودة للفصول
+function goHome(){
+  document.getElementById('displayArea').style.display='none';
+  document.getElementById('mainMenu').style.display='grid';
+}
+
+// بحث داخلي
+document.getElementById('searchInput').addEventListener('input', function(){
+  const val = this.value.toLowerCase();
+  for(const ch in chapters){
+    const card = document.querySelector(`.ch-card[onclick*="${ch}"]`);
+    if(chapters[ch].title.toLowerCase().includes(val)){
+      card.style.display='block';
+    }else{
+      card.style.display='none';
+    }
   }
 });
 </script>
+
+</body>
+</html>
