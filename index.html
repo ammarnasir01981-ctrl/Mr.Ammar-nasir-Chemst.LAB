@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة الكيمياء الذكية | الأستاذ عمار ناصر حسين</title>
+<title>منصة الكيمياء الذكية للسادس العلمي | الأستاذ عمار ناصر حسين</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -12,124 +12,102 @@
   --bg: #f8f9fa; --white: #ffffff;
 }
 body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; }
-
-#welcome-overlay {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  z-index:3000; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  color:white; text-align:center; transition:0.8s ease-in-out;
-}
-
-header { background: var(--primary); color:white; padding:20px; text-align:center; border-bottom:5px solid var(--accent); box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-
-.search-container { padding:30px; text-align:center; background: var(--white); }
-.search-wrapper { position: relative; max-width:600px; margin:auto; }
-.search-box { width:100%; padding:15px 50px 15px 25px; border-radius:35px; border:2px solid var(--secondary); font-size:1.1rem; outline:none; }
-.search-icon { position:absolute; right:20px; top:50%; transform:translateY(-50%); color: var(--secondary); }
-
-.chapters-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(130px,1fr)); gap:15px; padding:20px 5%; }
+header { background: var(--primary); color:white; padding:20px; text-align:center; border-bottom:5px solid var(--accent); }
+.search-container { padding:20px; text-align:center; background: var(--white); }
+.search-box { width:80%; padding:10px 15px; border-radius:25px; border:2px solid var(--secondary); font-size:1.1rem; outline:none; }
+.chapters-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:15px; padding:20px 5%; }
 .ch-card { background:white; border-radius:15px; padding:20px; text-align:center; cursor:pointer; transition:0.3s; box-shadow:0 4px 6px rgba(0,0,0,0.05); border:1px solid #eee; }
 .ch-card:hover { transform:translateY(-10px); background:var(--secondary); color:white; }
 .ch-card i { font-size:2.5rem; margin-bottom:10px; color: var(--secondary); }
 .ch-card:hover i { color: var(--accent); }
-
-.display-area { display:none; padding:20px 5%; max-width:1000px; margin:auto; animation: fadeInUp 0.5s ease; }
-.result-card { background:white; border-radius:20px; padding:30px; box-shadow:0 10px 40px rgba(0,0,0,0.1); border-right:10px solid var(--primary); }
-
-.loading-shimmer { display:none; text-align:center; padding:50px; }
-.pulse-loader { width:80px; height:80px; background:var(--secondary); border-radius:50%; margin:auto; animation:pulse 1.5s infinite; opacity:0.6; }
-
-@keyframes pulse { 0%{transform:scale(0.8);opacity:0.8;}100%{transform:scale(1.2);opacity:0;} }
-@keyframes fadeInUp { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
+.display-area { display:none; padding:20px 5%; max-width:1000px; margin:auto; }
+.result-card { background:white; border-radius:20px; padding:30px; box-shadow:0 10px 40px rgba(0,0,0,0.1); border-right:10px solid var(--primary); margin-bottom:20px; }
+.math-lab { background:#fffde7; border-right:6px solid #fbc02d; padding:15px; margin-top:10px; border-radius:10px; }
+.math-step { font-family: 'Courier New', Courier, monospace; background:#fff; padding:10px; margin:10px 0; border:1px solid #ddd; font-weight:bold; color:#d32f2f; }
+.btn-back { background: var(--primary); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; margin-bottom:10px; }
 </style>
 </head>
 <body>
 
-<div id="welcome-overlay">
-  <div style="font-size:5rem; margin-bottom:10px;">🧪</div>
-  <h1>الأستاذ عمار ناصر حسين</h1>
-  <p>يرحب بكم في الكتاب المنهجي الذكي المتصل بـ Gemini AI</p>
-  <button onclick="enterApp()" style="margin-top:20px; padding:12px 50px; border-radius:30px; border:none; background:var(--accent); color:var(--primary); font-weight:900;">ابدأ التعلم التفاعلي</button>
-</div>
-
 <header>
-  <strong>منصة الكيمياء المنهجية | الأستاذ عمار ناصر حسين</strong>
+  <h1>🧪 منصة الكيمياء الذكية للسادس العلمي</h1>
+  <p>إعداد الأستاذ: عمار ناصر حسين</p>
 </header>
 
 <div class="search-container">
-  <div class="search-wrapper">
-    <i class="fas fa-search search-icon"></i>
-    <input type="text" id="aiSearch" class="search-box" placeholder="اطلب شرح أي موضوع أو حل سؤال من الكتاب...">
-  </div>
-  <div style="margin-top:15px">
-    <button onclick="setMode('study')" style="padding:8px 20px;border-radius:20px;border:none;background:#0056b3;color:white;">📘 وضع الدراسة</button>
-    <button onclick="setMode('exam')" style="padding:8px 20px;border-radius:20px;border:none;background:#b71c1c;color:white;">📝 وضع الامتحان الوزاري</button>
-    <button onclick="processRequest('search')" style="padding:8px 20px;border-radius:20px;border:none;background:#002366;color:white;">اسأل جيمني الذكي</button>
-  </div>
+  <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن درس أو سؤال...">
 </div>
 
 <div class="chapters-grid" id="mainMenu">
-  <div class="ch-card" onclick="processRequest('الفصل الأول الثرموداينمك')"><i class="fas fa-fire"></i><br>الفصل 1</div>
-  <div class="ch-card" onclick="processRequest('الفصل الثاني الاتزان الكيميائي')"><i class="fas fa-balance-scale"></i><br>الفصل 2</div>
-  <div class="ch-card" onclick="processRequest('الفصل الثالث الاتزان الأيوني')"><i class="fas fa-vial"></i><br>الفصل 3</div>
-  <div class="ch-card" onclick="processRequest('الفصل الرابع الكهربائية')"><i class="fas fa-bolt"></i><br>الفصل 4</div>
-  <div class="ch-card" onclick="processRequest('الفصل الخامس التناسقية')"><i class="fas fa-atom"></i><br>الفصل 5</div>
-  <div class="ch-card" onclick="processRequest('الفصل السادس التحليلية')"><i class="fas fa-microscope"></i><br>الفصل 6</div>
-  <div class="ch-card" onclick="processRequest('الفصل السابع العضوية')"><i class="fas fa-flask"></i><br>الفصل 7</div>
-  <div class="ch-card" onclick="processRequest('الفصل الثامن الحياتية')"><i class="fas fa-leaf"></i><br>الفصل 8</div>
+  <div class="ch-card" onclick="showChapter('ch1')"><i class="fas fa-fire"></i><br>الفصل 1</div>
+  <div class="ch-card" onclick="showChapter('ch2')"><i class="fas fa-balance-scale"></i><br>الفصل 2</div>
+  <div class="ch-card" onclick="showChapter('ch3')"><i class="fas fa-vial"></i><br>الفصل 3</div>
+  <div class="ch-card" onclick="showChapter('ch4')"><i class="fas fa-bolt"></i><br>الفصل 4</div>
+  <div class="ch-card" onclick="showChapter('ch5')"><i class="fas fa-atom"></i><br>الفصل 5</div>
+  <div class="ch-card" onclick="showChapter('ch6')"><i class="fas fa-microscope"></i><br>الفصل 6</div>
+  <div class="ch-card" onclick="showChapter('ch7')"><i class="fas fa-flask"></i><br>الفصل 7</div>
+  <div class="ch-card" onclick="showChapter('ch8')"><i class="fas fa-leaf"></i><br>الفصل 8</div>
 </div>
 
 <div class="display-area" id="displayArea">
-  <div class="loading-shimmer" id="loader">
-    <div class="pulse-loader"></div>
-    <p style="margin-top:20px; font-weight:bold; color:var(--secondary);">جاري معالجة السؤال...</p>
-  </div>
-  <div id="aiResponse"></div>
+  <button class="btn-back" onclick="goHome()">← العودة للفصول</button>
+  <div id="chapterContent"></div>
 </div>
 
 <script>
-let MODE = "study";
+// بيانات الفصول + أسئلة وزارية
+const chapters = {
+  ch1: { title:"الفصل 1: الثرموداينمك", content:`
+    <h2>الفصل الأول: الثرموداينمك</h2>
+    <p>شرح كامل لمبادئ الحرارة والطاقة والتغيرات الكيميائية.</p>
+    <div class="math-lab">
+      <h4>مثال: احتراق الغلوكوز</h4>
+      <p>q = m * c * ΔT</p>
+      <div class="math-step">q = 1200 * 4.2 * 4.5 = 22680 J</div>
+    </div>
+  `},
+  ch2: { title:"الفصل 2: الاتزان الكيميائي", content:`
+    <h2>الفصل الثاني: الاتزان الكيميائي</h2>
+    <p>ثابت الاتزان، حساب تراكيز الاتزان، التفاعل العكسي.</p>
+    <div class="math-lab">
+      <h4>مثال: H2 + I2 ⇌ 2HI</h4>
+      <p>Kc = [HI]^2 / ([H2][I2])</p>
+      <div class="math-step">x ≈ 0.267 M</div>
+    </div>
+  `},
+  ch3: { title:"الفصل 3: الاتزان الأيوني", content:"<p>شرح كامل للاتزان الأيوني مع الأمثلة.</p>"},
+  ch4: { title:"الفصل 4: الكهربائية", content:"<p>شرح كامل للتيار، الجهد، المقاومة، وقوانين أوم.</p>"},
+  ch5: { title:"الفصل 5: التناسقية", content:"<p>شرح المعقدات التناسقية وأمثلة محلولة.</p>"},
+  ch6: { title:"الفصل 6: التحليلية", content:"<p>طرق التحليل الكمي والنوعي، أمثلة وزارية.</p>"},
+  ch7: { title:"الفصل 7: العضوية", content:"<p>هيدروكربونات، كحوليات، أحماض، تفاعلات مفصلة.</p>"},
+  ch8: { title:"الفصل 8: الحياتية", content:"<p>الأحماض الأمينية، الإنزيمات، الخلايا، والعمليات الحيوية.</p>"}
+};
 
-function enterApp(){ document.getElementById('welcome-overlay').style.display='none'; }
-
-function setMode(m){ MODE=m; alert(m==='exam'?"📝 تم تفعيل وضع الامتحان الوزاري":"📘 تم تفعيل وضع الدراسة"); }
-
-async function processRequest(type){
-  const query = type==='search'?document.getElementById('aiSearch').value:type;
-  if(!query) return;
-
+// عرض الفصل
+function showChapter(id){
   document.getElementById('mainMenu').style.display='none';
   document.getElementById('displayArea').style.display='block';
-  document.getElementById('loader').style.display='block';
-  document.getElementById('aiResponse').innerHTML='';
+  document.getElementById('chapterContent').innerHTML = chapters[id].content;
+}
 
-  try{
-    const response = await fetch("http://localhost:3000/ask",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({question:query,mode:MODE})
-    });
-    const data = await response.json();
-    renderResponse(data.answer);
-  }catch{
-    renderResponse("❌ تعذر الاتصال بالخادم.");
+// العودة للفصول
+function goHome(){
+  document.getElementById('displayArea').style.display='none';
+  document.getElementById('mainMenu').style.display='grid';
+}
+
+// بحث داخلي
+document.getElementById('searchInput').addEventListener('input', function(){
+  const val = this.value.toLowerCase();
+  for(const ch in chapters){
+    const card = document.querySelector(`.ch-card[onclick*="${ch}"]`);
+    if(chapters[ch].title.toLowerCase().includes(val)){
+      card.style.display='block';
+    }else{
+      card.style.display='none';
+    }
   }
-
-  document.getElementById('loader').style.display='none';
-}
-
-function renderResponse(text){
-  document.getElementById('aiResponse').innerHTML=`
-    <div class="result-card">
-      <div style="color:#6a1b9a; border-bottom:2px solid #e1bee7; padding-bottom:10px; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
-        <i class="fas fa-robot"></i>
-        <span>الاستجابة الذكية</span>
-      </div>
-      <div style="white-space:pre-line; line-height:1.9">${text}</div>
-      <button onclick="location.reload()" style="margin-top:20px; border:none; background:var(--primary); color:white; padding:10px 25px; border-radius:20px; cursor:pointer;">العودة للرئيسية</button>
-    </div>
-  `;
-}
+});
 </script>
 
 </body>
