@@ -5,95 +5,203 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الكيمياء الذكية | الأستاذ عمار ناصر حسين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #0d47a1; --secondary: #1976d2; --accent: #ffd600;
-            --math-bg: #fff8e1; --chem-bg: #e3f2fd; --bg: #f4f7f6;
-        }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; scroll-behavior: smooth; }
-
-        /* واجهة الترحيب */
-        #splash {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, var(--secondary), var(--primary));
-            z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; text-align: center;
+            --primary: #0d47a1;
+            --secondary: #1976d2;
+            --accent: #ffd600;
+            --math-bg: #fffde7;
+            --bg: #f0f2f5;
         }
 
-        /* الهيدر */
-        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-bottom: 5px solid var(--accent); }
-
-        /* شريط البحث */
-        .search-area { padding: 25px; background: white; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .search-box { width: 80%; max-width: 600px; padding: 12px 25px; border-radius: 30px; border: 2px solid var(--secondary); outline: none; font-family: 'Cairo'; }
-
-        /* شبكة الفصول */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 30px 5%; }
-        .ch-card {
-            background: white; border-radius: 15px; padding: 20px; text-align: center;
-            cursor: pointer; transition: 0.3s; border: 1px solid #ddd;
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
-        .ch-card:hover { transform: translateY(-10px); background: var(--secondary); color: white; }
-        .ch-card i { font-size: 2.5rem; margin-bottom: 10px; color: var(--secondary); }
-        .ch-card:hover i { color: var(--accent); }
 
-        /* منطقة المحتوى */
-        .display-panel { display: none; padding: 20px 5%; max-width: 1000px; margin: auto; }
-        .lesson-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-right: 8px solid var(--primary); }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .welcome-section {
+            background: white;
+            margin: 20px auto;
+            max-width: 900px;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #ddd;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: var(--secondary);
+            color: white;
+        }
+
+        .content-area {
+            display: none;
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
 
         /* مختبر الرياضيات */
-        .math-lab { background: var(--math-bg); border-right: 6px solid #ff9800; padding: 20px; border-radius: 15px; margin-top: 25px; }
-        .calculation { font-family: 'Courier New', monospace; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #ffe0b2; margin: 10px 0; font-weight: bold; color: #d84315; }
+        .math-lab {
+            background: var(--math-bg);
+            border-right: 6px solid #fbc02d;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
 
-        /* بوت جيمني */
-        .gemini-btn { background: linear-gradient(45deg, #1a73e8, #9b51e0); color: white; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 20px; width: 100%; }
-        .gemini-res { display: none; background: #f3e5f5; padding: 20px; border-radius: 15px; margin-top: 15px; border: 1px solid #9b51e0; }
+        .math-step {
+            font-family: 'Courier New', Courier, monospace;
+            background: #fff;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            color: #d32f2f;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-back {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .gemini-res {
+            background: #e8f5e9;
+            border-right: 6px solid #4caf50;
+            padding: 15px;
+            margin-top: 15px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 
-<div id="splash">
-    <div style="font-size: 5rem; margin-bottom: 20px;">⚛️</div>
-    <h1>الأستاذ عمار ناصر حسين</h1>
-    <p>يرحب بطلبته في "الكتاب المنهجي الذكي" المتصل بـ Gemini AI</p>
-    <button onclick="start()" style="margin-top:20px; padding:12px 50px; border-radius:30px; border:none; background:var(--accent); font-weight:900; cursor:pointer;">دخول للمنصة</button>
-</div>
-
 <header>
-    <h2>كيمياء السادس العلمي | منصة الأستاذ عمار ناصر حسين</h2>
+    <h1>🧪 الكتاب الكيميائي الذكي</h1>
+    <p>إعداد الأستاذ: عمار ناصر حسين</p>
 </header>
 
-<div class="search-area">
-    <input type="text" id="aiInput" class="search-box" placeholder="ابحث عن موضوع أو مسألة (مثال: المسعر، بفر، هيس)...">
-    <button onclick="askAI('search')" style="background:var(--primary); color:white; border:none; padding:11px 25px; border-radius:30px; cursor:pointer; margin-right:5px;">اسأل جيمني</button>
+<div class="welcome-section" id="intro">
+    <h2>أهلاً بك يا بطل في منصتك التفاعلية</h2>
+    <p>هنا تجد شرح جميع الفصول، حل الأمثلة والوزاريات، مع تبسيط العمليات الرياضية المعقدة.</p>
+    <p>اختر فصلاً لتبدأ رحلة التفوق.</p>
 </div>
 
-<div class="grid" id="mainGrid">
-    <div class="ch-card" onclick="askAI('الفصل الأول: الثرموداينمك')"><i class="fas fa-fire"></i><h3>الفصل 1</h3></div>
-    <div class="ch-card" onclick="askAI('الفصل الثاني: الاتزان الكيميائي')"><i class="fas fa-balance-scale"></i><h3>الفصل 2</h3></div>
-    <div class="ch-card" onclick="askAI('الفصل الثالث: الاتزان الأيوني')"><i class="fas fa-vial"></i><h3>الفصل 3</h3></div>
-    <div class="ch-card" onclick="askAI('الفصل الرابع: الكهربائية')"><i class="fas fa-bolt"></i><h3>الفصل 4</h3></div>
-    <div class="ch-card" onclick="askAI('الفصل الخامس: التناسقية')"><i class="fas fa-atom"></i><h3>الفصل 5</h3></div>
-    <div class="ch-card" onclick="askAI('الفصل السادس: التحليلية')"><i class="fas fa-microscope"></i><h3>الفصل 6</h3></div>
+<div class="chapters-grid" id="grid">
+    <div class="card" onclick="showTopic('ch1')">
+        <h3>الفصل الأول</h3>
+        <p>الثرموداينمك</p>
+    </div>
+    <div class="card" onclick="showTopic('ch2')">
+        <h3>الفصل الثاني</h3>
+        <p>الاتزان الكيميائي</p>
+    </div>
+    <div class="card" onclick="showTopic('ch3')">
+        <h3>الفصل الثالث</h3>
+        <p>الاتزان الأيوني</p>
+    </div>
 </div>
 
-<div class="display-panel" id="panel">
-    <button onclick="location.reload()" style="color:var(--primary); background:none; border:none; cursor:pointer; font-weight:bold; margin-bottom:15px;">← العودة للفصول</button>
-    <div id="loading" style="display:none; text-align:center;">جاري استخراج البيانات من الكتاب المنهجي ومعالجة الرياضيات...</div>
-    <div id="content"></div>
+<div class="content-area" id="content">
+    <button class="btn-back" onclick="goHome()">← العودة للفصول</button>
+    <div id="topic-detail"></div>
 </div>
 
 <script>
-    function start() { document.getElementById('splash').style.display = 'none'; }
+    const data = {
+        ch1: {
+            title: "الفصل الأول: الثرموداينمك - مثال المسعر",
+            body: `
+                <h3>حل مثال (1-2): احتراق الكلوكوز</h3>
+                <p><strong>المسألة:</strong> حرق 3g من الكلوكوز في مسعر يحتوي 1200g ماء...</p>
+                <div class="math-lab">
+                    <h4>🛠️ مختبر الرياضيات (تبسيط العمليات):</h4>
+                    <p>1. حساب ΔT: (25.5 - 21.0) = 4.5°C</p>
+                    <p>2. حساب الحرارة (q): 4.2 × 1200 × 4.5</p>
+                    <div class="math-step">الحساب الذهبي: (4.2 * 10 = 42) ثم (42 * 120 * 4.5) = 22680 J</div>
+                    <p>3. القسمة الطويلة لعدد المولات: (3 / 180)</p>
+                    <div class="math-step">نختصر: (1 / 60) ≈ 0.017 mol</div>
+                </div>
+                <div class="gemini-res">💡 جيمني: تذكر دائماً أن الحرارة في المسعر تخرج من التفاعل ليدخل في الماء، لذا نعكس الإشارة.</div>
+            `
+        },
+        ch2: {
+            title: "الفصل الثاني: الاتزان الكيميائي - ثابت الاتزان",
+            body: `
+                <h3>حل مثال (2-5): حساب تراكيز الاتزان</h3>
+                <div class="math-lab">
+                    <h4>🛠️ مختبر الرياضيات (فك الجذور):</h4>
+                    <p>عند الوصول للمعادلة: 5.29 = (2x)² / (0.5-x)²</p>
+                    <div class="math-step">بجذر الطرفين: جذر 5.29 هو 2.3</div>
+                    <p>كيف عرفنا؟ لأن 20*20=400 و 25*25=625، فجذر 529 يقع بينهما وينتهي بـ 3 لأن 3*3=9.</p>
+                </div>
+            `
+        },
+        ch3: {
+            title: "الفصل الثالث: الاتزان الأيوني",
+            body: `<p>جاري تحميل دروس الفصل الثالث بأسلوب الأستاذ عمار ناصر حسين...</p>`
+        }
+    };
 
-    function askAI(query) {
-        const input = query === 'search' ? document.getElementById('aiInput').value : query;
-        if(!input) return;
+    function showTopic(id) {
+        document.getElementById('intro').style.display = 'none';
+        document.getElementById('grid').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        
+        const topic = data[id];
+        document.getElementById('topic-detail').innerHTML = `
+            <h2>${topic.title}</h2>
+            <div>${topic.body}</div>
+        `;
+        window.scrollTo(0, 0);
+    }
 
-        document.getElementById('mainGrid').style.display = 'none';
-        document.getElementById('panel').style.display = 'block';
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('content').
+    function goHome() {
+        document.getElementById('intro').style.display = 'block';
+        document.getElementById('grid').style.display = 'grid';
+        document.getElementById('content').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
